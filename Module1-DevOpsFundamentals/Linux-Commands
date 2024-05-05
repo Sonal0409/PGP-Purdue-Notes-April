@@ -1,0 +1,192 @@
+Linux Fundamentals:
+=============================
+
+
+Importance of Linux in DevOps
+
+-> It is scalable
+-> It is customizable
+-> Can be integrated easily with Devops tools
+
+Linux:
+========================
+- Commonly used OS
+- OS: A code that manages the hardware of your physical machine
+   OR
+   A software that acts as an interface between the hardware of your system and the software that runs on your system
+
+We need to learn how to connect to a linux OS
+funadamentals of linux
+file system of linux
+users and permissions of linux OS
+
+Components of Linux OS:
+========================
+1. Bootloader or boot strap
+whenever we click on start button on the laptop, the BIOS system will start
+BIOS will wait for the h/w to be ready
+BIOS will trigger the Bootloader
+Bootloader is the first software that will kick start the booting process of your computet
+
+2. Kernel
+It integrates the hardware like CPU, memeory and other periperal devices
+It is the lowest level of your OS
+Inside the kernal we have init system
+
+3. Daemon process
+Daemons in linux are small applications that act as servents in background ensuring that the key functions of the OS are up and ready
+
+4. Graphical server
+
+5. Desktop Environment
+These create the look and feel of your desktop
+
+6. Application that we install on the linux OS
+
+==============================================
+
+
+Connect to AWS EC2 Server:
+===============================================
+
+Connect to the server via windows machine using SSH:
+===================================
+
+Go to AWS → click on checkbox of the server -> click on connect → click on SSH connect
+Copy the command given under Example on the screen
+
+Like this:
+
+ssh -i "04May.pem" ec2-user@ec2-18-117-72-4.us-east-2.mpute.amazonaws.com
+
+
+
+
+Open Command prompt on windows machine
+
+
+
+
+
+
+Press enter
+
+Give yes and press enter key
+
+
+
+
+OR connect via EC2 instance connect from AWS itself
+
+
+
+
+
+Scroll down on the AWS page and click on Connect button
+
+Your server will be connected via the browser.
+
+
+===========================================================
+
+Linux commands are case sensitive
+
+To check the OS
+
+# uname
+
+To check the OS distribution and its version: 
+
+        # cat /etc/os-release
+
+To clean  up the screen
+
+            # clear
+
+
+History of the command executed so far
+# history
+
+Print working directory of the user logged it
+# pwd
+
+~ here indicates that it is the home directory of the user that we are logged in with
+
+Become a super user root in terminal
+
+# sudo su -
+
+# pwd  ⇒ see the change in home directory
+
+Create your own directory
+
+# mkdir myfiles
+
+List the directories
+
+# ls
+
+Switch to the directory
+
+# cd myfiles
+
+Create a file in the directory:
+# touch file1
+
+To list the files:
+
+# ls -al
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
