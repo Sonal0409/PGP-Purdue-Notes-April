@@ -1,0 +1,108 @@
+Created by Sonal Mittal 
+
+Day 1 - Commands:
+**********************************
+
+Switch to user root in your terminal:
+
+#       sudo su -
+
+
+
+Command to install git :
+
+$      yum install git -y
+
+
+
+To Check the version of git installed on your server:
+
+$ git --version
+
+
+
+
+Demo 1: Execute  commands to  create a GIT Local repository
+
+Step 1: Create  a working directory using linux command
+
+$ mkdir myproject
+
+Step 2: Switch to the directory myproject
+
+$ cd myproject
+
+ Step 3: First create some files in working directory -> myproject
+
+Execute below commands:
+
+   $ touch index1.html
+   $ touch index2.html
+
+Step 4: Initialize git on the directory myproject by executing below command
+
+$ git init  ⇒ This command will  create a local repository
+
+Step 4: Check if local repository is created or not
+
+$  ls -al  ⇒ There will be  a .git folder, which represents your logical git Local repository.
+
+Screenshot of Entire scenario:
+
+
+
+
+Demo 2:  Add git configurations 
+
+
+# git config --global user.name admin
+#  git config --global user.email admin@gmail.com
+
+
+
+
+
+Demo 3: Execute git commands to add some files into GIT Local repository
+
+
+Step 1: Check the status of git local repository:
+
+Execute the command:
+
+   $ git status
+
+ Step 2: Now  add only 1 file to the staging area
+
+Execute the git add command as show below:
+
+$ git add index1.html
+
+
+
+ Now again see the status of files 
+
+$ git status
+
+The files will be in the staging area -> green color
+
+Sep 3: Now let's Commit the files to Local repository and check if the commit id is generated or not.
+
+$   git commit -m "added file index1.html"
+
+The above command commits all the files that are in the staging area.
+
+
+Note:
+$ git commit -m "add file only 1" filename ==> commits only this particular file to local repo
+
+Screenshot of the entire scenario:
+
+
+
+
+
+
+
+
+
+
