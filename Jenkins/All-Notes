@@ -1,0 +1,2450 @@
+Day 1- Agenda
+================================
+
+Discuss  about Continuous Integration and its Automation Server
+Introduction to Jenkins
+Features of Jenkins
+Installing Jenkins on The EC2 server - Use the same VM that we worked on for GIT and github
+
+
+================================================
+
+
+
+
+JENKINS Installation on EC2 Server
+====================================
+
+First connect to the EC2 server on AWS
+
+
+Change to root user:
+
+# sudo su -
+
+************************************
+
+JAVA Installation
+
+If OS is AMAZON LINUX 2 AMI
+
+…
+ sudo amazon-linux-extras install java-openjdk11 -y
+…
+
+IF Command to install java on CENTOS 8
+
+..
+sudo yum install java-11-openjdk-devel
+…
+
+Command to install java 11 on Ubuntu
+
+…
+apt-get update 
+sudo apt install default-jre
+
+…
+Amazon linux 2023
+========================
+Install Java
+
+# sudo dnf update
+
+# sudo dnf install java-11-amazon-corretto -y
+
+=====================================
+
+Install Jenkins:
+===================================
+
+On the browser open https://www.jenkins.io/
+
+Go to downloads section
+
+Select centos OS
+
+Go to Ec2 machine and execute commands:
+
+#  sudo su -
+
+#  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+ #   sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+#    yum install jenkins -y
+# systemctl start jenkins
+
+# systemctl status jenkins
+
+
+We need to now  set up jenkins dashboard
+=======================================
+
+For this, take public ip address of ec2 server, copy it and go to your browser and give
+
+http://publicipaddress:8080
+
+On the ec2 server terminal , execute below command
+
+$ cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Copy the password and paste in the browser (jenkins)
+
+
+
+
+Click on continue
+
+Click on Jenkins suggested plugin tab(on left side)
+
+
+
+On the next page
+
+Username: admin
+Password : admin
+Retype password: admin
+Email: admin@gmail.com
+
+
+
+
+
+Click on continue
+
+
+
+
+
+
+Click on finish
+
+You will be on the jenkins dashboard
+
+
+
+Day 2: Agenda:
+======================================
+
+> Jobs in jenkins, build a job in jenkins
+> Integration of Jenkins with git and github
+> triggers in Jenkins
+> Build Automation Maven and its integration with jenkins
+
+
+Start the jenkins Dashboard:
+===========================
+
+On the terminal:
+
+# sudo su -
+
+#  systemctl start jenkins
+
+Go to the browser, take the public IP of your ec2 server
+
+http://EC2ServerpublicIP:8080
+
+Login in with your credentials:
+
+Username: admin
+Password: admin
+
+=========================================
+
+Demo 1: Create a Jenkisn job that will execute linux commands.
+=========================================
+
+
+Create a new job in jenkins
+Click on + sign to create new item/job/project
+Give a name to the job : Job1
+Select freestyle project and click on OK button
+Go to build Steps→ select Execute Shell→ give commands like
+touch file1
+echo “hello Jenkins!”
+
+Save the job → click on build Now button.
+
+
+See the console output and check the workspace directory.
+
+
+IF you are facing issues with Jenkins server being offline then perform below steps:
+
+> Stop the Ec2 Instance
+
+
+
+
+Select Ec2 server → Click on Actions → Click on instance settings→ Click on Chnage instance type
+
+
+
+
+
+
+
+
+Click on Apply
+
+
+Start the machine again
+
+
+
+
+Instance will be running
+
+Connect to Instance and restart jenkins
+
+
+# sudo su -
+
+# systemctl start jenkins
+
+============================================
+
+Jenkins Integration with Git and Github-> Source code management tool
+============================================
+
+Demo 2: Create a Jenkisn job that will clone a github repository in jenkins workspace
+
+Create a new job in jenkins
+Click on + sign to create new item/job/project
+Give a name to the job : CloneRepo
+Select freestyle project and click on OK button
+On the project click on Source code management
+Select git option
+Give git hub repo path
+https://github.com/Sonal0409/DevOpsCodeDemo.git
+
+Branch name as ===>  Master
+
+Save the job
+
+Click on Build now
+
+Repository will be cloned in jenkins workspace
+
+You can go to job → workspace folder to see the files
+
+==============================================
+
+If Jenkins is slow : try this Solution:
+
+Go to Dashboard- manage Jenkins
+
+
+
+
+Click on System
+
+
+
+
+
+In system →remove old URL and  give Jenkins CurrentURL
+
+
+
+
+
+Save the changes. Now the jenkins server should be better.
+
+=====================================================
+Demo 3: Triggers in Jenkins
+=====================================================
+
+Build Trigger prieodically
+
+Go to Job Clone repo -->Click on Configure → Click on  build trigger-->Select  build preodically --> give * * * * * --> Save and build now
+
+
+
+
+
+2nd trigger:
+=============
+
+Go to clone Repo → click on configure → Click on Build Triggers→ Click on  Poll SCM --> 
+Give the schedule as => * * * * *
+
+Save the job.
+
+Build will be generated each time there is a change in the repository only.
+
+3rd trigger:
+==================
+
+
+Webhook Trigger:
+========================
+
+Webhooks allow Jenkins to be notified when certain events happen on the repo. When the specified events happen, we’ll send a POST request to each of the URLs you provide.
+
+Open the clone repo job → click on configure → click on GitHub hook trigger for GITScm polling → Save the job
+
+Save the job and now go to git hub
+
+Always save the job and then only  go to github, perform these steps
+
+
+
+
+
+go to the repository settings
+select webhooks on left side
+
+
+
+
+
+
+
+delete if any exisitng webhook
+
+click on createwebhook on right side
+
+provide following information:
+
+Payload URL : jenkinsurl/github-webhook/ ===> http://3.140.252.165:8080/github-webhook/
+
+Content type : select application/json
+
+Secret: no need of any value
+
+Which events would you like to trigger this webhook?
+
+select first option -- Just the push event.
+
+Select Active
+click on add webhook.
+
+
+
+
+now make some changes in repo,
+go to jenkins--> you will see a new build has been created
+
+========================================================
+
+Agenda:
+==========================================
+
+> Maven Tool and its plugins
+> Jenkins and Maven Integration
+> Compile, Review, test and Package the code 
+> Manage Plugins in jenkins
+> Pipeline as a Code
+
+
+
+
+Maven Build Tool
+====================
+
+These tools are used to take java source code and package  into an artifact that is deployable.
+
+Maven is a powerful Project management tool. This tool will help developers to write the source code and tests cases and maintain them locally
+
+IDE -> eclipse, IntelliJ  -> they come integrated with maven so developers can immediately start creating a Maven project and start writing the code and test cases
+
+Maven is a plugin based tool
+
+Everything in Maven is performed with help of plugins
+
+For every build task we have a corresponding plugin in Maven
+
+In order to perform build task we will give the maven command that will download maven plugin for us and run it to complete the task.
+
+Traditionally Developers will run the maven locally and manually but now with Devops we have to create automated jobs in Jenkins using maven that will take the source code given by developer in GitHub and run maven command to compile/test/review/package .
+
+> When the command or goal is execute --> plugin is downloaded and run--> it preforms desired task --> Generates an output files and data
+
+
+> Developer sends source code and tests cases to GitHub
+
+In maven there 2 types of plugins
+
+ > CORE BUILD Plugins
+ > Reporting Plugins
+
+ CORE BUILD Plugins
+=================
+
+Task to performed			Plugin-Name				  Goal/Command				output
+
+1. Compile the Code			Compiler					mvn compile					compiled files -> .class files
+
+2. Execute Test cases			Surefire					mvn test						test cases passed or failed output
+
+3. Package the Code			package					mvn package					Artifact file/binary file -> .war file or .jar file
+
+
+Reporting Plugins
+===================
+
+Plugins that are needed to validate and review the code. These plugins will always generate reports
+The format of reports in maven is always .xml, .txt, .csv, .html
+
+
+Task to performed			Plugin-Name					   Goal/Command				output
+
+1. Code Review 			pmd								mvn pmd:pmd				code review report -> pmd.xml
+(Static Code Analysis)          (programming Mistake detector)
+
+
+2. Test reports                       Surefire-reporting, findbugs  		 mvn test					test reports 
+
+3. Code Coverage                  cobertura(deprecated),SonarQube        mvn sonar:sonar                         Coverage report -> coverage.xml
+                                                 JACOCO
+
+
+=========================
+
+- Whenever maven command is executed, maven will create a folder called as "target" folder where all the output files and reports will be found
+
+- Maven Project Structure
+
+every Maven project will include following folders:
+
+src/main/java ==> In this you will source code
+
+src/test/java ==> in this folder you will find test cases
+
+
+pom.xml file -> it is the heart of maven project
+
+In this file the developer will mention 
+
+> the name of dependencies that are needed by the developer to write the code and test cases
+
+> The names of the plugins to be used for build process
+
+> Artifact name and its extensions
+
+> maven commands have to executed on the same folder where we have pom.xml file
+
+
+
+Demo:
+==================================
+
+Jenkins--> Manage Jenkins-->Tools
+
+Under GIT==> leave it same 
+
+Under maven ==> let's install it automatically
+Type name as  mymaven 
+Install automatically box has to be checked.
+Save the changes
+
+
+
+
+
+CREATION OF COMPILE JOB
+***********************************
+
+1. new Job --1.complie-->freestyle project
+2. Source code management --> select git
+--->give git path ===> https://github.com/Sonal0409/DevOpsCodeDemo.git
+
+3. build ==> select invoke top level maven targets
+   select maven version===> mymaven
+    goal ==> compile
+4. save ==> build now 
+So all the compiled files will be present at this location
+==> look for this line in console output at the end on jenkins
+Compiling 13 source files to /var/lib/jenkins/workspace/compile1/target/classes
+
+5. Go to workspace on the left side of jenkins Job compile
+In the folder go to ==> target folder==> go to classes
+******************************
+
+
+
+
+
+
+
+
+2nd JOB ==>Code Review
+*********************
+
+Jenkins--> new item--> Name= code Review==> freestyle project
+==> source codemanagement==>select git==> 
+give git repo name https://github.com/Sonal0409/DevOpsCodeDemo.git
+
+Step 2: build ==> invoke top level maven target==>
+ select maven version==>mymaven ==> goal = pmd:pmd
+
+save==> build now
+==> click on build number and see the console
+
+Goto Workspace on the left side of jenkins Job code review
+In the folder go to ==> target folder ==> you will find pmd.xml file.
+
+
+
+We will convert this xml file into  trend report
+
+For this we will download a plugin on jenkins and use post build action 
+
+
+
+
+
+*******************************
+ manage jenkins--> plugins--> available plugins --> Search for warning -->Select the plugin → click on  install.
+
+
+
+
+
+Now go to the job Code Review⇒
+ go to post build actions ==> select record complier warnings and static result analysis
+
+Under tool ==> select PMD
+under report file format ==> give path of pmd.xml file ie:  target/pmd.xml
+or as mentioned in message below : copy **/pmd.xml  ( no quotes)
+
+Save the file and build now.
+
+
+
+
+After the build is successfull, you will see PMD Warnings
+
+So you will see 12 new warning have been generated on the code.
+Scroll down 
+Under package click on first one to check warnings.
+
+
+Job3  Package Job
+***************************
+
+Go to jenkins--> new item--> Name= Package==> freestyle project
+==> source codemanagement==>select git==> give git repo https://github.com/Sonal0409/DevOpsCodeDemo.git
+ 
+build ==> invoke top level maven target==>mymaven
+
+ goal = package
+
+==> save==> build now
+==> click on build number and see the console
+
+==> go to workspace ==> target/addressbook.war
+
+
+Assignment:
+
+Connecting all the 3 freestyle  job and execute them by single click.
+
+=====================================================
+
+Day 4 : 30 June -> Agenda
+======================================================
+
+> Declarative pipeline structure and syntax
+> Build Pipeline using git and maven in Jenkins
+> Parametrized Pipeline, Interactive pipeline, Conditional pipeline, Post action pipeline
+> Jenkinsfile
+
+=======================================================
+
+
+
+pipelines Using plugins are called as Plugin based pipelines or Upstream and downstream pipelines
+These pipelines are created using freestyle jobs.
+
+Jenkins allows us to create multiple task in one single job.
+
+Whenever a user has to preform set of tasks one after other (in a sequence) or in parallel, it can easily be done using 
+pipeline project template in Jenkins
+
+Pipleines in jenkins are nothing but set of task executed in sequence(by default) 
+
+When a user is creating a pipeline we will have to write code for it.
+
+Jenkins comes with an inbuilt pipeline syntax generator - using which we can give some inputs and pipeline code will be generated automatically. 
+
+The pipeline code is based on Groovy scripting which is Domain specific language
+
+It is declarative in nature
+
+key 'value'
+
+Example:
+
+name 'Jenkins'
+tool 'CICDtool'
+Training 'DevOps'
+
+Here the key is mostly will be given to you by Jenkins, value the user has to provide
+
+
+In Jenkins pipeline code using 2 types of syntax
+
+ > Scripted pipeline syntax
+=======================================
+> scripted pipeline syntax always starts with a keyword called as node
+> When Jenkins version1 came in to the market, the admin used scripted pipeline syntax to write pipeline code
+> scripted pipeline syntax is difficult to read and write.
+> there is no structure or no definite style which writing the code
+> The code written scripted pipeline syntax is not validated by Jenkins
+> This syntax is no longer used
+> if the pipeline fails, you have to run the pipeline from the beginning
+
+ > Declarative pipeline syntax
+========================================
+> Declarative pipeline syntax always starts with a keyword called as pipeline
+> With jenkins version2, Declarative pipeline syntax was introduced
+> This is well structured syntax, where user is provided with definite pipeline sections
+> we need to just declare the pipeline code
+> It declarative in nature, syntax is very simple
+> if the pipeline failes, you can restart the pipeline form the point that it had failed previously
+> Stages in pipeline means Job to be executed
+> Every stage will have a Name in the pipeline, steps to be executed, post build steps, 
+> jenkins provides a pipeline code snippet generator, that helps your to learn pipeline scripting very fast
+
+Syntax:  key 'value' 
+for example:
+ name 'Jenkins'
+ sh 'echo "hello All"'
+
+
+
+
+Structure of pipeline:
+// to write a comment
+// all code will be written inside the brackets
+
+pipeline {
+
+tools{
+
+                 // This section is optional
+
+                // here we write the tools configured that will be used to execute the steps in stages
+
+                     // like maven tool, ansible tool
+}
+
+
+agent {
+
+                // this is a mandatory section
+		// In this section we will write labels of the servers where we have to run the pipeline stages
+                // By default the pipeline will be executed on the Jenkins server only
+                // So the default agent value is always " any "
+		// any --> here is any available server --> what is server available right now --> the current Jenkins server
+}
+
+
+
+/* parameters are used in pipeline to value to all stages
+Instead of hard coding the data in the pipeline it is always better to create parameter variables
+
+parameters are nothing but unique names with a value
+with a single value or multiple values
+parameter can store - String, number, Boolean, choices
+
+As a parameter is used in a pipeline it becomes a parametrized build */
+
+parameters{
+
+String(name: parmName, defaultValue: 'val1' description: 'demo1')
+Number
+Choice(name: parmName, defaultValue: 'val1' description: 'demo1' choices: ["1","2","3"])
+Boolean
+
+
+}
+
+
+
+stages{   // the jobs to be perfomed
+
+
+
+stage('Job1')  // Every stage is a independent job
+{
+
+    agent {
+
+                label 'testserver'
+
+}
+ 
+   steps{
+
+                       ${params.Name}
+            
+             // here write steps for what has to be build
+}
+
+
+}
+
+}
+
+}
+
+
+
+DEMO 1 : Parameterized pipeline
+======================
+
+Create a new job → give name as pipeline1→ select template as pipeline→ add the below code in pipeline
+
+pipeline{
+    
+    agent any
+    
+    parameters{
+        
+        string(name: 'Tool', defaultValue: 'Jenkins', description: 'Tool name')
+        string(name: 'username', defaultValue: 'admin', description: 'User name loggedin')
+        
+    }
+    
+    stages{
+        stage('Print the tool name and username')
+        {
+            steps{
+                echo "The tool we are using is ${params.Tool}"
+                echo "The user logged in is ${params.username}"
+                
+            }
+        }
+    }
+    
+    
+}
+
+
+
+==============================
+Continuous pipeline with maven + git + jenkins
+
+Create a new job → select template as pipeline
+
+pipeline{
+    
+    agent any
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('Checkout Code')
+        {
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        
+         stage('Code Review')
+        {
+            steps{
+                
+                sh 'mvn pmd:pmd'
+                
+            }
+            post{
+                // various post actions
+                 always{
+                    echo "This is post build steps"
+                }
+                
+                unstable{
+                   echo "The number of warnings are more than 15, build is unstable" 
+                }
+                success{
+                    
+                    recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [pmdParser(pattern: '**/pmd.xml')]
+                    
+                }
+               
+            }
+        }
+        
+         stage('Code Test')
+        {
+            steps{
+                
+                sh 'mvn test'
+                
+            }
+        }
+        
+         stage('Code Build')
+        {
+            steps{
+                
+                sh 'mvn package'
+                
+            }
+        }
+    }
+       
+}
+
+
+Parallel Stages:
+==============================================
+
+Parallel stages
+=================================================
+
+
+pipeline{
+    
+    tools{
+        maven 'mymaven'
+    }
+
+    agent any
+
+   stages{
+       stage('Clone a Repo'){
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+           }
+       }
+
+      stage('parallel stage') {
+
+      parallel {
+
+       	stage('Job1'){
+          	 steps{
+              	echo "This parallel job1"
+          	 }
+      	 }
+       
+       stage('Job2'){
+           	steps{
+               echo "This parallel job2" 
+           }
+       }
+    }
+  }
+ }
+}
+
+=====================================================
+
+Agenda:
+===================
+> Quick Recap -> Parameterized pipelines with when keyword(if condition)
+> Jenkins file for pipeline code in VC tool
+> Multi branch pipeline
+> Master and Node agent setup, use it in pipeline code
+
+
+
+Demo:
+===========
+Create a job → select pipeline project and add it
+
+pipeline{
+    
+    agent any
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    parameters{
+        choice(name: "ENV",choices: ["","Dev","QA"])
+    }
+    
+    
+    stages{
+        
+        stage('Build on Dev Server')
+        {
+            // write a condition=> when should this stage be executed
+            
+            when {
+                expression {params.ENV == "Dev"}
+            }
+        steps{
+            git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            sh 'mvn pmd:pmd'
+            sh 'mvn package'
+        }
+            
+            
+        }
+        
+        stage('Build on QA server')
+        {
+            when{
+                expression {params.ENV == "QA"}
+            }
+        steps{
+            git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            sh 'mvn test'
+            
+        }
+            
+        }
+        
+        
+    }
+    
+    
+}
+
+
+
+Run the pipeline by clicking on build now
+
+Refresh page and execute again by giving parameter
+===============================================
+
+Demo 2: Jenkinsfile for pipeline code in VC tool
+================================================
+
+Jenkisnfile is a simple text file with no extension
+It preferred name always is Jenkisnfile
+This file consist of declarative pipeline code in this file
+This file is maintained in github repositories
+This file can be on the main branch or feature branch
+By using this Jenkisnfile, multiple team members can contribute together to the pipeline code
+We will be able to version control the code and track the changes
+Not everybody has to loginto Jenkisn to write the code
+We can write the code in our local machine and push to github
+In Jenkins server we will create a pipeline job that will obtain the Jenkisnfile from github and we run the job, all the stages of the pipeline code will get executed
+
+Step1 : We will now see, how to create a jenkinsfile in github
+Step 2: How to obtain this jenkins file on single jenkins server to run the pipeline code
+
+
+Demo:
+
+Click on new Item → give the job name as JenkinsfileDemo → Select pipeline project→ press OK
+In the job template → click on pipeline tab → select the dropdown option as Pipeline script from SCM
+Select SCM as → git
+Repository URL? ⇒ https://github.com/Sonal0409/DevOpsCodeDemo.git
+
+We will also add a trigger → Go to Build triggers tab above→ POLL SCM → * * * * *
+
+So that if there is any commit, my pipeline should get executed everytime.
+
+===========================================
+
+> MultiBranch Pipeline
+
+Basically we have many branches in github for a repository
+Each branch may have separate set of tasks/jobs to be executed
+Whenever a branch is created on the repo, Make sure the branch has a Jenkinsfile init
+In the Jenkinsfile you write the code which is needed to execute certain tasks related to the branch
+we will set up a job in jenkins that will scan every branch of your github repository
+Whichever branch has the jenkinsfile present on it
+            > for that branch a jenkins pipeline job will be created with same name as branch name  and Jenkinsfile code will be executed
+
+Whichever branch of your repo does not have Jenkinsfile on it. No job will be created for it.
+
+
+
+
+Demo:
+
+Click on new item→ create job -> give name as MultibranchdemoJob → select the template as Multibranch Pipeline → press Ok
+
+In General section → give Display name as :  Multibranch Pipeline
+
+In branch Sources section → Click on Add source → select git
+
+Give git  Project Repository -> https://github.com/Sonal0409/MultiBranchDemo.git
+
+Nomore changes and save the job.
+
+Jenkins will automatically scan the branches of the repo and create pipeline jobs.
+
+Click on multibranch pipeline job name and you will see the 3 jobs created for 3 branches.
+
+=====================================================
+
+Master and node architecture in Jenkins
+
+
+
+
+
+
+Create a linux worker and dispatch job from master to worker
+
+Create a new EC2 instance with OS as Amazon linux 2
+Provide the security group rule 2 also.
+
+Connect to the instance and install following tools:
+
+Execute command to become root
+
+sudo su -
+
+Java:
+
+sudo amazon-linux-extras install java-openjdk11 -y
+
+GIT:
+
+yum install git -y
+
+            Create a root directory
+This directory will be used exclusively my Jenkisn master to place remote files and create job workspace
+You need to create a directory and give read/write/execute access to it
+
+Execute:
+
+$ cd /tmp
+$ mkdir jenkinsdir
+
+The path of root directory will be /tmp/jenkinsdir
+
+give read/write/execute access to the root directory
+
+$ chmod -R 777 /tmp/jenkinsdir
+
+**********************************************
+
+Setup on Jenkins master:
+
+Go to manage jenkins → Configure system → Scroll down to jenkins location and change the Jenkisn URL to be the latest URL
+
+http://3.147.195.251:8080/
+
+Save the page
+
+
+2. Manage jenkins → configure global security→ scroll down → Agents → select Random radio button
+
+Save the page
+
+
+Manage Jenkins – Manage nodes 
+
+Click on + New node
+
+Give node name: slave1
+
+Select Permanent Agent
+
+Click on create
+
+Now give description : anything text
+
+Number of executors: 1
+
+Remote root directory: /tmp/jenkinsdir
+
+
+Labels : linux_slave
+
+Usage : select second option from dropdown
+
+
+
+Launch method: launch agents via SSH
+
+Host: private IP of agent node
+
+Credentials: click on Add button > click on jenkins
+
+Select Kind : SSH username and private key
+
+Give id : agentnode
+Description as : agentnode
+
+username: ec2-user
+
+Private key: you will get the private key of the agent node in your local laptop> downloads folder
+
+got the downloads folder of laptop, search for the key(.pemfile)
+
+open the file with notepad and copy the entire text
+
+paste the text in jenkins > under private key
+
+
+Now select the credentials from the drop down.
+
+
+step 7: Host Key Verification Strategy → select the 4th option->Non verifying Verification Strategy
+
+Save the node details
+
+On the dashboard you can see the node is now connected to master
+
+====================================
+
+07 July 2024
+=========================================
+
+Windows Agent:
+
+
+Download git on windows server:
+
+https://git-scm.com/download/win
+
+Download java 11 on windows server
+
+https://www.oracle.com/in/java/technologies/javase/jdk11-archive-downloads.html
+
+
+restart the instance.
+Restart the jenkins server
+now take public ip and loginto jenkins
+
+Step 1: Go to Manage Jenkins --->SYSTEM ---> Check the Jenkins URL is same as URL of browser --> Save
+
+Step 2: Go to Manage Jenkins---> SECURITY --> Scroll down to AGENTS-->select RANDOM radiobutton--> Save
+
+Step 3: Go to Manage Jenkins---> Node  --> New Node
+
+Select New Node--> give name as Winslave--> select radio button permanamet Agent
+
+Name : winslave
+Description: give windows 10 machine 
+==> # of executors = 1 ==> means number of jobs that we want to run on this slave node. Let it be 1 for now
+===> Remote root directory ==> C:\jenkinsdir
+Location of a directory folder on your windows machine , so that jenkins can create a workspace folder and store all the files. As we have seen earlier while executiong jobs.
+
+For this --> got to C drive and create an emapty folder.
+C:\jenkinsdir
+
+====>  Label : win_slave ==> this is like a tag to slave machine. This is how we will identify the slave machine--> remeber this
+
+===> Usage: 
+Select 2nd option: Only build jobs with label expressionmatching the job :
+
+This means for which ever job we will give label as win_slave that job only will run on this job.
+
+===> Launch Method : select option 1 : Launch agent by connecting to controller.
+
+Scroll down
+
+Add tools
+
+Add git path as C:\Program Files\Git\cmd\git.exe
+
+
+SAVE the job.
+
+Now go to win_slave ==> download the agent.jar file and put it in your jenkinsdir folder.
+
+Copy the path and change the public ip in below path
+java -jar agent.jar -jnlpUrl http://3.139.60.71:8080/computer/winslave/slave-agent.jnlp -secret 61e8e20badd531b48caeffac8d686f182eb2d77a1c303ee39c5db9d00117c0be -workDir "C:\jenkinsdir"
+
+Go to bash and start jenkins, refresh instance
+Go to cmd prompt
+change to cd c:\jenkinsdir
+copy the above jenkins agent path
+System will get connected.
+
+***************************************
+RUN a job on Agent
+
+Go to Dashboard
+
+Select the package job---> configure --> GENERAL --> click on Restrict where this project can be run and enter win_slave  
+
+SAVE THE JOB
+
+CLICK on BUILD NOW -- to start the build
+
+CLick on build number--> got to console --to check it is executing on AGent
+
+Go to C folder-->jekinsdir---> C:\jenkinsdir\workspace\package\target==> 
+you will see addressbook.war file.
+
+==============================================
+
+Pipeline to run each stage on different worker node.
+
+pipeline{
+    
+    agent none
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('Build on linux_node')
+        {
+           agent{
+               label 'linux_node'
+           } 
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+               sh 'mvn pmd:pmd'
+
+           }
+        }
+        
+        stage('Build on Windows')
+        {
+            agent{
+                label 'win_slave'
+            }
+            steps{
+                git 'https://github.com/Sonal0409/myproject-01june-Sonal.git’
+            }
+        }
+    }
+}
+
+===================================================
+
+Jenkins agent which is a Docker container
+====================================================
+
+
+Docker is a container tool That provides Images and Containers
+
+Images: 
+==================
+They are binary files with libraries and frameworks needed for your application to run.
+Docker gives us base Images of free OS, tools, servers, Programming language.
+We can pull those images and use them.
+These images are present in docker hub - registry - free
+
+Container: 
+===============
+When we run the given image, we get a container
+Container : Is an Environment or a process which has OS, libraries and your desired application
+Whatever is on the image will be running on the container
+It is an environment where we deploy our application
+It is an environment  where we can run commands
+We can create container with a single line command
+You can connect to connect to the container and work on it just like you work on VM
+
+
+For you to work with docker, we need to install docker on the VM
+
+Go to Jenkins VM and install docker on the same machine
+
+The command is : 
+
+   # yum install docker -y
+   # systemctl start docker
+
+
+For jenkins to run docker command via docker pipeline plugin give permissions to jenkins user to run docker command
+
+#  chmod 777 /var/run/docker.sock
+
+
+In jenkins download docker pipeline plugin
+
+Manage Jenkins → plugins → available plugins → Docker Pipeline plugin
+
+Create a Jenkins Job → Pipeline → add the below code
+
+pipeline{
+    agent{
+        docker {
+
+ image 'node:14-alpine'
+}
+    }
+    
+    stages{
+        stage('execute a command')
+        {
+            steps{
+                sh 'node --version'
+            }
+        }
+    }
+}
+
+Save and run it
+
+Integration of Jenkins with Slack:
+==========================
+
+Slack is a messaging application that will connect your team members
+Allows multiple team members to collaborate together, send messages, location, send notification
+
+To start working with slack -> we need to login with out email id and create a channel
+
+In the channel we will add the team members who will get messages and notification
+
+Our intention is to integrate slack with Jenkins tool
+
+So that whenever a Jenkins job is executed, we get a notification of job execution and job execution status on the slack channel.
+
+Another usecase could be from Slack channel you run command to trigger a jenkinsJob remotely.
+Setup Slack tool and integrate it with jenkins
+
+Go to this link:
+https://slack.com/intl/en-in/get-started#/createnew
+
+
+
+You will get a code on your email, enter the code there
+
+And you will get option to create a workspace
+
+
+
+
+
+
+
+
+Click on skip the step
+
+
+
+
+
+
+
+
+
+Integrate Slack with Jenkins CI app
+
+
+
+
+
+Click on integrations and click on Add an app
+
+
+
+In add directory search for Jenkins -> click on install
+
+
+
+
+
+Click on add to slack
+
+
+
+
+Select your channel from the drop down
+
+
+
+
+Click on Add jenkins CI integrations
+
+
+
+
+
+On the next page, scroll to step 3 and note down the below details:
+
+Team subdomain: 
+Integration token credential ID: 
+
+
+
+Install slack notification plugin on jenkins:
+==============================
+
+Manage Jenkins → plugins → available plugins → slack notification → click on install button
+
+
+
+
+Setup slack on jenkins:
+=====================
+
+Manage Jenkins → System -> Search for slack
+
+In workspace add the subdomain name that we have copied from slack app directory(step3)
+
+Create credentials to setup slack token
+
+Credentisls kind = secret text
+
+
+
+
+
+
+Enter the channel name which you have created on slack
+
+
+
+
+
+Save the changes
+
+Now take any freestyle job that is already existing
+
+Clcik on the job name→ configure → go to post build actions
+
+
+
+
+
+
+Slack pipeline
+====================
+
+pipeline{
+    agent any
+    
+    stages{
+        stage('execute a command')
+        {
+            steps{
+                    echo "hello to slack"
+            }
+            post {
+                success{
+                    slackSend channel: 'jenkins-jobs', message: 'Job Executed successfully'
+                }
+            }
+        }
+    }
+}
+
+Give your channel name in the above code for slack send message
+
+13 July 2024
+===================================
+
+Continuous Deployment
+
+Tomcat server- Installation on EC2  (2 VM, other than the jenkins machine)
+
+Deployment of war file on tomcat server using freestyle project
+ > Jenkins plugin : deploy on container
+
+Deployment of war file on tomcat server using pipeline project
+ > Jenkins plugin: SSH Agent
+
+Quiz for your end exam
+
+
+********************************
+
+Deployment Process (for your information)
+
+https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/
+
+The easiest way to run this application is simply to move the war file to your CATALINA_HOME/webapps directory. Tomcat will automatically expand and deploy the application for you. You can view it with the following URL (assuming that you're running tomcat on port 8080 as is the default):
+Public ip:8080/sample
+
+Set for tomcat
+*****************
+
+Tomcat installation on EC2 instance
+
+Create Ec2 server with OS as amazon linux 2 ami
+
+Pre-requisites
+
+EC2 instance with Java 11
+
+# sudo su -
+
+# sudo amazon-linux-extras install java-openjdk11 -y
+
+OR:
+
+# sudo dnf update
+
+# sudo dnf install java-11-amazon-corretto -y
+
+# java -version
+
+
+Install tomcat:
+==========================
+
+# Create tomcat directory
+
+Go to the EC2 machine - t2 micro
+
+
+# cd /opt
+
+#  wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.91/bin/apache-tomcat-9.0.91.tar.gz
+
+#  ls   ⇒ you will see the tar file
+
+Unzip the tar file
+
+# tar -xvzf apache-tomcat-9.0.91.tar.gz
+
+Rename the directory
+
+# mv apache-tomcat-9.0.91 tomcat
+
+================================
+Start tomcat server
+================================
+
+#  cd tomcat
+
+
+# cd bin
+
+# ./startup.sh   ==> tomcat will be up and running
+
+Check point :
+
+access tomcat application from browser on port 8080
+
+http://<VM Public_IP>:8080
+
+
+
+
+======================================
+
+By default the Manager is only accessible from a browser running on the same machine as Tomcat. If you wish to modify this restriction, you'll need to edit the Manager's context.xml file.
+
+
+======================================================
+Lets edit the context.xml file of tomcat so as to access manager app form our windows or mac machine browser 
+========================================
+
+
+# cd ..
+
+# vim /opt/tomcat/webapps/host-manager/META-INF/context.xml
+
+Press i
+
+comment this line in the contxt.xml
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+
+How to comment : : use this symbols:
+
+  <!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+  allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> →
+
+Save the file.  (press esc key → :wq! → enter key)
+
+
+
+
+=============================================
+
+# vim /opt/tomcat/webapps/manager/META-INF/context.xml
+
+Press i to insert data
+
+comment this line in the contxt.xml
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+
+How: use this symbols:
+
+  <!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+  allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+
+Save the files (:wq!)
+
+
+
+
+==================================================================
+
+
+
+
+ Restart tomcat services
+
+#  cd bin
+
+# ./shutdown.sh
+
+# ./startup.sh
+
+
+
+
+
+Create roles and users
+
+
+# cd ..
+
+
+$ cd /opt/tomcat/conf
+
+$ vim tomcat-users.xml
+
+Scroll till bottom and add 
+
+at the end before </tomcat-users> add these roles
+
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+<user username="deployer" password="deployer" roles="manager-script"/>
+<user username="tomcat" password="s3cret" roles="manager-gui"/>
+
+Save the file
+
+Make sure there is no space before each line in the file
+
+********************************
+
+Restart tomcat
+
+# cd ..
+
+$ cd bin
+
+$ ./shutdown.sh
+
+$ ./startup.sh
+
+
+publicip:8080
+
+click on managerapp
+
+Username:    tomcat
+Password:   s3cret
+
+
+
+This completed tomcat installation
+***********************************************
+
+Go to jenkins server and start the jenkins dashboard
+
+Download a plugin: Deploy to container
+
+Create a free style job
+
+Give name to the job
+
+Select freestyle project
+Press okay
+
+give the repo name under source code management:  https://github.com/Sonal0409/DevOpsCodeDemo.git
+
+
+
+
+
+
+Build steps : select Invoke top level maven targets
+
+Maven Version : mymaven
+Goal: package
+
+
+
+Post build actions
+============================
+select deploy war/ear on container
+
+
+
+WAR/EAR files : **/*.war
+
+Containers:
+
+click on add container--> select Tomcat 9.x Remote
+
+Add credentials. 
+Click on ADD button→ jenkins→
+Username: deployer , password = deployer
+Id = tomcat, description = tomcat
+
+Click on ADD button to save the credentials
+In credentials dropdown, select the credentials
+
+Tomcat URL
+
+http://publicip:8080/
+
+Save the job and execute it
+
+You can access the application from 
+
+http://publicip:8080/addressbook/
+
+
+==========================================
+
+Agenda : 14 July-2024
+==========================================
+
+Continuous Deployment Pipeline
+Take backup of Jenkins server on Current Ec2 server itself using thinBackup plugin
+Take backup of jenkins server on S3 bucket and restore it on a new jenkins server
+
+
+Demo:
+=============
+
+Connect to the tomcat VM and start tomcat
+# sudo su -
+
+# cd /opt/tomcat/bin
+
+# ./startup.sh
+
+
+On Jenkins → Create a new Job → Select project as pipeline→ add below code
+
+In the below pipeline code, Pls change the tomcat URL to your tomcat server ipaddress:8080
+
+pipeline{
+    
+    agent any
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('Checkout Code')
+        {
+            steps{
+            git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        
+        stage('Build Code')
+        {
+            steps{
+                sh 'mvn package'
+            }
+            post{
+                success{
+                    deploy adapters: [tomcat9(credentialsId: 'tomcat-id', path: '', url: 'http://3.129.68.207:8080/')], contextPath: null, war: '**/*.war'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+Just for your information:
+
+deploy adapters: [tomcat9(credentialsId: 'tomcat-id', path: '', url: 'http://3.129.68.207:8080/')], contextPath: null, war: '**/*.war'
+
+deploy adapters : using the plugin deploy to container
+
+It has a container --> tomcat9
+
+tomcat9 container needs 2 parameters
+
+url: 'http://3.129.68.207:8080/  ==> URL of tomcat server
+
+
+credentialsId: 'tomcat-id'  ==> credentials to connect to tomcat manager and deploy using a script
+
+
+contextPath: null, => the destination directory is the default home directory of tomcat webapps
+
+
+war: '**/*.war'  ==> search for war file in the workspace
+
+=================================
+ASSIGNMENT
+=================================
+
+Scenario 2:
+
+Deploy code on tomcat using Pipeline as code
+
+Algorithm of stages in the pipeline:
+
+Stage 1 -> clone the repo   
+Stage2 -> Package the code
+Stage3 -> Deployment of war file
+ >  jenkins will connect to tomcat server over ssh
+> using SSH command(SCP) we will copy the war file from jenkins workspace to the webapps directory of tomcat server
+
+
+Step 1: Start the tomcat webserver
+
+# cd /opt
+# cd tomcat
+# cd bin
+# ./startup.sh
+
+Step 2: In jenkins – Download a plugin : ssh agent
+Install it.
+
+Step 3: Create a pipeline job
+Stage 1 -> clone the repo   
+Stage2 -> Package the code
+
+Pipeline code for above 2 stages is :
+
+pipeline{
+    
+    tools{
+ 
+        maven 'mymaven'
+    }
+    
+    agent any
+    
+    stages{
+        stage ('Clone a repo')
+        {
+            steps {
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        
+        stage ('Package the code')
+        {
+            steps{
+                sh 'mvn package'
+            }
+        }
+    }
+    
+}
+
+
+Now build the job
+
+Go to console output of build.. Scroll down and get the path of workspace where war file is present.
+
+For me it is:
+
+/var/lib/jenkins/workspace/CI_CDPipeline/target/addressbook.war
+
+
+Step 4:
+
+Download SSH agent plugin on jenkins
+
+In the pipeline click on pipeline syntax
+
+
+Select from the drop down → SSH Agent
+
+Select the credentials by clicking on ADD button
+
+Select jenkins
+
+Select SSh with username with private key
+
+Give id : tomcatid2
+Give description as : tomcatid2
+Give username as : ec2-user
+Under Private Key
+Click on enter directly
+Click on Add button
+Go to AWS instance→ scroll right to see the pem file nae
+
+Go to download folder , get your pem file→ open it with notepad.. Copy all content and paste it in jenkins under key
+
+Clcik on ADD
+
+Under SSH agent in the drop down select your usercredentials
+
+Click on generate pipeline script
+
+Copy the script and we will add it in pipeline stage 
+
+ stage('Deploy the code on tomcat server')
+        {
+            steps{
+                
+                sshagent(['tomcatid1']) {
+                    
+    // script to copy war file on webapps directory
+    
+}
+            }
+        }
+
+
+Using SSH we will copy the addressbook.war file in the tomcat webapps directory
+
+The SSh command to copy the .war file is:
+
+ command:  scp  -o StrictHostKeyChecking=no filenamelocation username@publicip:Destinationpath
+
+For me it is :
+
+sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/PipelineCodeDeployment/target/addressbook.war ec2-user@18.116.238.106:/opt/tomcat/webapps'
+
+Save the JOB
+
+
+***** Also an important step is :
+
+Go to tomcat server and give permissions to ec2-user to make changes to webapps directory
+
+Just execute this command on tomcat server:
+
+# chown -R ec2-user:ec2-user /opt
+
+Now build the job.
+
+
+Complete script for CI Cd is:
+
+pipeline{
+    
+    tools{
+  
+        maven 'mymaven'
+    }
+    
+    agent any
+    
+    stages{
+        stage ('Clone a repo')
+        {
+            steps {
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        
+        stage ('Package the code')
+        {
+            steps{
+                sh 'mvn package'
+            }
+        }
+        
+        stage('Deploy the code on tomcat server')
+        {
+            steps{
+                
+                sshagent(['tomcatid1']) {
+                    
+    
+sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/PipelineCodeDeployment/target/addressbook.war ec2-user@18.116.238.106:/opt/tomcat/webapps'
+
+    
+}
+            }
+        }
+    }
+    
+}
+
+
+
+
+*************************
+Jenkins Server Backup and Restore steps:
+==============================================================
+
+Create a new server and install jenkins on it
+
+Create some jobs on the jenkins server
+
+Create an S3 bucket on AWS to store the back up of jenkins directory
+
+TO allow AWS ec2 server to write into AWS s3 bucket we need to
+
+> Create a IAM role for amazons3fullaccess for EC2
+
+> Attach the role to jenkins Ec2 server-->actions-->security-->IAM role
+
+
+
+Now stop jenkins server from terminal
+====================================
+# systemctl stop jenkins
+
+# tar -zcvf jenkins-backup.tar.gz /var/lib/jenkins
+
+# ls
+
+# aws s3 cp jenkins-backup.tar.gz s3://jenkins-backup-demo/jenkins-backup.tar.gz
+
+Check the s3 bucket-> it will have the back up
+
+Now create a new instance and add the below script in user data. This will install and start jenkins. It will take few mins
+
+#!/bin/bash
+
+sudo yum update -y
+sudo yum install git -y
+sudo amazon-linux-extras install java-openjdk11 -y
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum install jenkins -y
+
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+
+Once you are able to access jenkins on browser, go to the terminal now:
+
+# systemctl stop jenkins
+
+# aws s3 cp s3://jenkins-backup-demo/jenkins-backup.tar.gz jenkins-backup.tar.gz
+
+# ls
+
+# rm -rf /var/lib/jenkins
+
+# tar -zxvf jenkins-backup.tar.gz -C /
+
+# systemctl start jenkins
+
+Link to sonarqube integration with Jenkins
+=============================
+
+https://vimeo.com/769395983/6aa9d00fb4
+
+Notes on how you can integrate security testing tool with CICD pipeline theyby creating a devsecops pipeline
+
+Snyk Tool integration with jenkins
+======================================
+
+Download the synk security plugin
+
+Manage jenkins → plugins→ available plugins→ search for Synk security → Click on install button
+
+
+Configure Synk tool
+
+Manage Jenkins → Tools → scroll down to Synk installations -> Add synk -> give name as synk -> save 
+
+
+
+
+Step 3: 
+
+Go to the url https://snyk.io/
+
+Click on sign up -> select github
+
+
+
+
+Step 4:  Click on  you name at the bottom left side of the page -> click on Accoutn settings:
+
+
+
+Click on general  -> auth token -> click on key-> click on show -> copy the key
+
+
+
+
+We will now create credentials in jenkins to store the auth token of snyk
+
+
+Jenkins → manage Jenkins → scroll to credentials →Click on global-> click on add credentials → select Snyk api token
+
+
+
+
+Add the auth token and give is and description→ click on create.
+
+Now create a pipeline job and execute below pipeline
+
+Note: pls change token ID and tools snyk name as per you have given in jenkins
+
+pipeline{
+    
+    agent any
+    
+    tools {
+        maven 'mymaven'
+        snyk 'snyk'
+    }
+    
+
+    
+    stages{
+        
+        stage('Checkout Code')
+        {
+            steps{
+        git 'https://github.com/Sonal0409/SonarQubeCoverageJava.git'
+            }
+        }
+        
+        stage('build Code'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+        
+        stage('Snyk Scan')
+        {
+            steps{
+                snykSecurity snykInstallation: snyk, snykTokenId: 'synk-token-11'
+            }
+        }
+    }
+    
+}
+
+
+The pipeline is going to fail as the scan results in 3 vulnerabilities.
+===========================================
+DAST -> ZAP tool
+===========================================
+ZAP is an open source security testing tools which is sued to find issues on the web application after it has been deployed
+
+Using ZAP we will perform passive or baseline scan in which we will observe the communication between the web browser and the application without actively iterating with the application
+
+
+Using ZAP we will perform active scans  which are more aggressive to the target application
+In this scan the ZAP tool will send different types of requests to different endpoints of the web application
+
+
+Docker tools and its integration with jenkins
+===================================
+Docker is a deployment tool, that will help you to deploy your build or application on a container
+
+What is a container:
+===============================
+
+A container is process which holds you application and its required s.w or frameworks needed for the app to run
+
+App.war + tomcat+java+os lib
+
+It is an isolated process where your application is running, a container has an IP address, has volume, has network, has file storage
+
+A container is running → application is running
+
+A container stop→ application stops
+
+
+How to create a container
+==================================
+A container is always launched from an Image
+Image is just a binary file or an executable
+When we run an Image a container is launched and container will be running with the application 
+
+Image is a file which has a list of libraries that are needed for our application to run on a container.
+
+Docker → IMAGE → Container [App is running]
+
+Types of images:
+===================
+
+Custom Image : Images created by users for their application code
+
+
+Base Image
+===================
+
+Docker as tool comes with list of ready made Images for open source:
+Databases
+OS
+Tools
+Programming language
+
+SO today we will use that base image of docker to install zap tool
+
+In today’s class we will use docker base image for ZAP
+
+We will run the image → we will get a container in which ZAP tool is running
+
+We will then provide a webpage URL as input to the ZAP container so that zap tool can scan the webpages of the application and generate DAST report.
+
+
+===========================================
+
+Create a pipeline job and add below code:
+=============================================
+
+def scan_type
+def target 
+pipeline{
+
+agent any 
+
+parameters {
+        choice  choices: ['Baseline', 'APIS', 'Full'],
+                 description: 'Type of scan that is going to perform inside the container',
+                 name: 'SCAN_TYPE'
+
+        string defaultValue: 'https://medium.com/',  // URL to scan
+                 description: 'Target URL to scan',
+                 name: 'TARGET'
+
+}
+
+
+stages{
+      stage('Setting up of the OWASP ZAP container'){
+
+      steps{
+          echo "pulling Image of ZAP ---> Start"
+          sh 'docker pull ghcr.io/zaproxy/zaproxy:stable'
+          echo "pulling of Image completed ---> End"
+          echo "Running Image ---> Starting Container"
+          sh 'docker run -dt --name owasp-$BUILD_NUMBER ghcr.io/zaproxy/zaproxy:stable'
+             
+      }
+      }
+
+     stage('Creating a working Directory in the container'){
+
+        steps{
+                 echo "Connect to container and execute command to create a directory"
+                 sh 'docker exec owasp-$BUILD_NUMBER mkdir /zap/wrk'
+        }
+     }
+
+     stage('Scan target on owasp container') {
+
+steps {
+                script {
+				            scan_type = "${params.SCAN_TYPE}"
+                    echo "----> scan_type: $scan_type"
+                    target = "${params.TARGET}"
+
+
+if (scan_type == 'Baseline') {
+                        sh """
+                             docker exec owasp-$BUILD_NUMBER \
+                             zap-baseline.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                    }
+else if (scan_type == 'APIS') {
+                        sh """
+                             docker exec owasp-$BUILD_NUMBER \
+                             zap-api-scan.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                     }
+                     else if (scan_type == 'Full') {
+                        sh """
+                             docker exec owasp-$BUILD_NUMBER \
+                             zap-full-scan.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                     }
+                     else {
+                        echo 'Something went wrong...'
+                     }
+      }
+            }
+        }
+
+        stage('Copy Report to Workspace') {
+            steps {
+                script {
+                    sh '''
+                         docker cp owasp-$BUILD_NUMBER:/zap/wrk/report.html ${WORKSPACE}/report.html
+                     '''
+                }
+            }
+        }
+    }
+
+
+post {
+        always {
+            echo 'Removing container'
+            sh '''
+                     docker stop owasp-$BUILD_NUMBER
+                     docker rm owasp-$BUILD_NUMBER
+                 '''
+
+ }
+
+
+}
+
+
+}
+
+
+Save the job and run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
