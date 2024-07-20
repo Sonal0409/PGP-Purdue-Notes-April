@@ -1,0 +1,68 @@
+
+# sudo su -
+
+# mkdir ssl
+
+# cd ssl
+
+[optional]
+
+# sudo dnf install openssl
+
+genereate SSL public and private key as shown below
+
+# openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+
+Country Name (2 letter code) [XX]:AA
+State or Province Name (full name) []:MM
+Locality Name (eg, city) [Default City]:MM
+Organization Name (eg, company) [Default Company Ltd]:xyz
+Organizational Unit Name (eg, section) []:xyz
+Common Name (eg, your name or your server's hostname) []:xyzser35
+Email Address []:
+
+
+Now let’s package the certificate.pem and key.pem file into a .p12 keystore.
+
+# openssl pkcs12 -inkey key.pem -in certificate.pem -export -out certificate.p12
+
+Let’s import the .p12 file into the .jks keystore using keytool as shown below.
+
+# keytool -importkeystore -srckeystore <path-to-cert-file.pfx> -srcstoretype pkcs12 -destkeystore jenkins.example.com.jks -deststoretype JKS
+
+example:
+
+keytool -importkeystore -srckeystore ./certificate.p12 -srcstoretype pkcs12 -destkeystore jenkinsserver.jks -deststoretype JKS
+
+Copy the generated .jks file into /var/lib/jenkins directory and update the ownership to jenkins:jenkins
+
+# sudo cp jenkinsserver.jks /var/lib/jenkins/
+
+# sudo chown jenkins:jenkins /var/lib/jenkins/jenkinsserver.jks
+
+
+Now we need to configure our jenkins service with the SSL part which consist of HTTPS port to listen on, HTTPS keystore to use and the corresponding password for the keystore. We can updated the jenkins.service file as shown below with the HTTPS configuration details.
+
+# vim /usr/lib/systemd/system/jenkins.service 
+
+Environment="JENKINS_HTTPS_PORT=8443"
+Environment="JENKINS_HTTPS_KEYSTORE=/var/lib/jenkins/jenkinsserver.jks"
+Environment="JENKINS_HTTPS_KEYSTORE_PASSWORD=password"
+
+
+It’s time to reload the daemon and restart the jenkins service for it take the changes in effect.
+
+sudo systemctl daemon-reload
+
+sudo systemctl restart jenkins.service 
+
+
+
+Note:
+
+Port to listen on for HTTP requests. Set to -1 to disable.
+
+Environment="JENKINS_PORT=-1"   //Disable HTTP Requests
+
+
+

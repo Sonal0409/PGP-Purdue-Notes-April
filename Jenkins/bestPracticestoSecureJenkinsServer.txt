@@ -1,0 +1,30 @@
+some of the best practices for securing your Jenkins server and credentials, and how to avoid common pitfalls.
+
+1 . Use HTTPS and SSL
+One of the first steps to secure your Jenkins server is to enable HTTPS and SSL, which encrypts the communication between your browser and the server. This prevents attackers from intercepting or tampering with your requests and responses, or stealing your credentials. You can use a self-signed certificate or a trusted certificate authority to generate and install the SSL certificate on your Jenkins server. You can also enforce HTTPS redirection and disable HTTP access to avoid mixed content errors.
+
+2. Configure user authentication and authorization
+
+Another essential step is to configure user authentication and authorization, which controls who can access and perform actions on your Jenkins server. You can use the built-in security realm or integrate with external systems, such as LDAP, Active Directory, or OAuth. You can also assign different roles and permissions to users or groups, based on the principle of least privilege. For example, you can restrict who can create, modify, or run jobs, or who can access sensitive data or settings.
+
+3. Manage and protect your credentials
+Your Jenkins server may need to store and use various credentials, such as passwords, API keys, SSH keys, or certificates, to interact with other systems or services. You should manage and protect your credentials carefully, using the Credentials plugin or a dedicated secrets manager, such as HashiCorp Vault or AWS Secrets Manager. You should also avoid hardcoding or exposing your credentials in plain text, such as in your job configuration, scripts, logs, or console output. Instead, you should use environment variables, credential bindings, or masking plugins to inject or obscure your credentials.
+
+4. Update and audit your plugins
+Plugins are a powerful way to extend the functionality of your Jenkins server, but they can also introduce vulnerabilities or dependencies. You should update and audit your plugins regularly, using the Plugin Manager or the CLI, to ensure that they are compatible, secure, and compliant with your policies. You should also review the permissions and scopes of your plugins, and disable or remove any unused or outdated plugins.
+
+5. Harden your server and network
+Besides the Jenkins-specific settings, you should also harden your server and network to protect your Jenkins server from external threats. You should apply the latest security patches and updates to your operating system and software, and use a firewall or a proxy to filter and monitor the incoming and outgoing traffic. You should also limit the exposure of your Jenkins server to the internet, and use a VPN or a bastion host to access it from a trusted network.
+
+
+Example: 
+
+Harden your Jenkins server by configuring strict firewall rules, applying OS patches, using strong passwords or 2FA, encrypting data with HTTPS/TLS, conducting regular audits and backups, and keeping Jenkins updated with security patches.
+
+You can utilize iptables to control the incoming traffic to have only specific (company) IPs allowed to reach the target server. This is great both for HTTP & SSH.
+Also would recommend setting a bastion/jump host infront of the Jenkins server for additional security.
+
+
+
+6. Monitor and audit your activity
+Finally, you should monitor and audit your activity on your Jenkins server, to detect and respond to any anomalies or incidents. You should enable and review the logging and auditing features of your Jenkins server, such as the System Log, the Audit Log, or the Audit Trail plugin. You should also use a monitoring tool or a dashboard, such as Prometheus, Grafana, or Datadog, to collect and visualize the metrics and alerts of your Jenkins server, such as the performance, health, or usage.
