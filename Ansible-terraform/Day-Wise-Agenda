@@ -36,6 +36,7 @@ Creating Ansible Role
 Error Handling and Troubleshooting
 Working with Dynamic Inventory, Creating a Dynamic Inventory Script
 Ansible with windows
+CICD with jenkins and Ansible
 
 Day 6:
 =============================================
@@ -62,3 +63,13 @@ Terraform Modules
 Terraform Workspaces
 Managing Terraform state files
 Backup of Terraform state file in external storage
+
+
+Extra topics:
+=========================================
+Github actions with Ansible
+Playbook with network related configuration - tentative- need to get form content team.
+
+
+
+
